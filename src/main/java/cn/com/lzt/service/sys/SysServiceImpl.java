@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +49,7 @@ public class SysServiceImpl implements ISysService {
 	 */
 	@Override
 	public void addUser(TSysuser userdto) {
+		userdto.setCreatedate(new Date());
 		this.sysUserMapper.insertSelective(userdto);
 		// 保存用户和角色的关系
 		TUserrole userRole = new TUserrole();
