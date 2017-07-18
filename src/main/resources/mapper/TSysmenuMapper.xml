@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.lzt.mapper.TSysmenuMapper" >
+  <resultMap id="BaseResultMap" type="cn.com.lzt.model.TSysmenu" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="parentid" property="parentid" jdbcType="INTEGER" />
+    <result column="menuname" property="menuname" jdbcType="VARCHAR" />
+    <result column="menuurl" property="menuurl" jdbcType="VARCHAR" />
+    <result column="menuimg" property="menuimg" jdbcType="VARCHAR" />
+    <result column="sortnum" property="sortnum" jdbcType="INTEGER" />
+    <result column="sortlevel" property="sortlevel" jdbcType="VARCHAR" />
+    <result column="isused" property="isused" jdbcType="INTEGER" />
+    <result column="menulevel" property="menulevel" jdbcType="VARCHAR" />
+    <result column="parentflag" property="parentflag" jdbcType="INTEGER" />
+    <result column="createdate" property="createdate" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, parentid, menuname, menuurl, menuimg, sortnum, sortlevel, isused, menulevel, 
+    parentflag, createdate
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.com.lzt.model.TSysmenuCriteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_sysmenu
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart != null and limitStart>=0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_sysmenu
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_sysmenu
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.com.lzt.model.TSysmenuCriteria" >
+    delete from t_sysmenu
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.com.lzt.model.TSysmenu" >
+    insert into t_sysmenu (id, parentid, menuname, 
+      menuurl, menuimg, sortnum, 
+      sortlevel, isused, menulevel, 
+      parentflag, createdate)
+    values (#{id,jdbcType=INTEGER}, #{parentid,jdbcType=INTEGER}, #{menuname,jdbcType=VARCHAR}, 
+      #{menuurl,jdbcType=VARCHAR}, #{menuimg,jdbcType=VARCHAR}, #{sortnum,jdbcType=INTEGER}, 
+      #{sortlevel,jdbcType=VARCHAR}, #{isused,jdbcType=INTEGER}, #{menulevel,jdbcType=VARCHAR}, 
+      #{parentflag,jdbcType=INTEGER}, #{createdate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.com.lzt.model.TSysmenu" >
+    insert into t_sysmenu
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="parentid != null" >
+        parentid,
+      </if>
+      <if test="menuname != null" >
+        menuname,
+      </if>
+      <if test="menuurl != null" >
+        menuurl,
+      </if>
+      <if test="menuimg != null" >
+        menuimg,
+      </if>
+      <if test="sortnum != null" >
+        sortnum,
+      </if>
+      <if test="sortlevel != null" >
+        sortlevel,
+      </if>
+      <if test="isused != null" >
+        isused,
+      </if>
+      <if test="menulevel != null" >
+        menulevel,
+      </if>
+      <if test="parentflag != null" >
+        parentflag,
+      </if>
+      <if test="createdate != null" >
+        createdate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="parentid != null" >
+        #{parentid,jdbcType=INTEGER},
+      </if>
+      <if test="menuname != null" >
+        #{menuname,jdbcType=VARCHAR},
+      </if>
+      <if test="menuurl != null" >
+        #{menuurl,jdbcType=VARCHAR},
+      </if>
+      <if test="menuimg != null" >
+        #{menuimg,jdbcType=VARCHAR},
+      </if>
+      <if test="sortnum != null" >
+        #{sortnum,jdbcType=INTEGER},
+      </if>
+      <if test="sortlevel != null" >
+        #{sortlevel,jdbcType=VARCHAR},
+      </if>
+      <if test="isused != null" >
+        #{isused,jdbcType=INTEGER},
+      </if>
+      <if test="menulevel != null" >
+        #{menulevel,jdbcType=VARCHAR},
+      </if>
+      <if test="parentflag != null" >
+        #{parentflag,jdbcType=INTEGER},
+      </if>
+      <if test="createdate != null" >
+        #{createdate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.com.lzt.model.TSysmenuCriteria" resultType="java.lang.Integer" >
+    select count(*) from t_sysmenu
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_sysmenu
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.parentid != null" >
+        parentid = #{record.parentid,jdbcType=INTEGER},
+      </if>
+      <if test="record.menuname != null" >
+        menuname = #{record.menuname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuurl != null" >
+        menuurl = #{record.menuurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.menuimg != null" >
+        menuimg = #{record.menuimg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sortnum != null" >
+        sortnum = #{record.sortnum,jdbcType=INTEGER},
+      </if>
+      <if test="record.sortlevel != null" >
+        sortlevel = #{record.sortlevel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isused != null" >
+        isused = #{record.isused,jdbcType=INTEGER},
+      </if>
+      <if test="record.menulevel != null" >
+        menulevel = #{record.menulevel,jdbcType=VARCHAR},
+      </if>
+      <if test="record.parentflag != null" >
+        parentflag = #{record.parentflag,jdbcType=INTEGER},
+      </if>
+      <if test="record.createdate != null" >
+        createdate = #{record.createdate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_sysmenu
+    set id = #{record.id,jdbcType=INTEGER},
+      parentid = #{record.parentid,jdbcType=INTEGER},
+      menuname = #{record.menuname,jdbcType=VARCHAR},
+      menuurl = #{record.menuurl,jdbcType=VARCHAR},
+      menuimg = #{record.menuimg,jdbcType=VARCHAR},
+      sortnum = #{record.sortnum,jdbcType=INTEGER},
+      sortlevel = #{record.sortlevel,jdbcType=VARCHAR},
+      isused = #{record.isused,jdbcType=INTEGER},
+      menulevel = #{record.menulevel,jdbcType=VARCHAR},
+      parentflag = #{record.parentflag,jdbcType=INTEGER},
+      createdate = #{record.createdate,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.com.lzt.model.TSysmenu" >
+    update t_sysmenu
+    <set >
+      <if test="parentid != null" >
+        parentid = #{parentid,jdbcType=INTEGER},
+      </if>
+      <if test="menuname != null" >
+        menuname = #{menuname,jdbcType=VARCHAR},
+      </if>
+      <if test="menuurl != null" >
+        menuurl = #{menuurl,jdbcType=VARCHAR},
+      </if>
+      <if test="menuimg != null" >
+        menuimg = #{menuimg,jdbcType=VARCHAR},
+      </if>
+      <if test="sortnum != null" >
+        sortnum = #{sortnum,jdbcType=INTEGER},
+      </if>
+      <if test="sortlevel != null" >
+        sortlevel = #{sortlevel,jdbcType=VARCHAR},
+      </if>
+      <if test="isused != null" >
+        isused = #{isused,jdbcType=INTEGER},
+      </if>
+      <if test="menulevel != null" >
+        menulevel = #{menulevel,jdbcType=VARCHAR},
+      </if>
+      <if test="parentflag != null" >
+        parentflag = #{parentflag,jdbcType=INTEGER},
+      </if>
+      <if test="createdate != null" >
+        createdate = #{createdate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.com.lzt.model.TSysmenu" >
+    update t_sysmenu
+    set parentid = #{parentid,jdbcType=INTEGER},
+      menuname = #{menuname,jdbcType=VARCHAR},
+      menuurl = #{menuurl,jdbcType=VARCHAR},
+      menuimg = #{menuimg,jdbcType=VARCHAR},
+      sortnum = #{sortnum,jdbcType=INTEGER},
+      sortlevel = #{sortlevel,jdbcType=VARCHAR},
+      isused = #{isused,jdbcType=INTEGER},
+      menulevel = #{menulevel,jdbcType=VARCHAR},
+      parentflag = #{parentflag,jdbcType=INTEGER},
+      createdate = #{createdate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+
+  <!-- 菜单查询 -->
+  <select id="findMenus" resultMap="BaseResultMap">
+    <!-- querytype(0：菜单导航查询，1：菜单管理查询，2：菜单角色查询) -->
+    SELECT sm.*
+    <if test="querytype != 2">
+      FROM t_sysmenu sm
+      <!-- 非超级管理员，需要根据用户权限查询菜单 -->
+      <if test="roleid != 1">
+        INNER JOIN t_roleright rm ON sm.id=rm.menuid
+        INNER JOIN
+        t_role r ON r.id=rm.roleid
+        INNER JOIN t_userrole ur ON ur.roleid=r.id
+        INNER JOIN t_sysuser u ON u.id=ur.userid
+        WHERE u.id = #{userid}
+        AND
+        sm.isused = 0
+      </if>
+      <!-- 0：菜单导航查询，1：菜单管理查询 -->
+      <if test="querytype == 0">
+        <if test="roleid != 1">
+          AND sm.parentid != 0
+        </if>
+        <if test="roleid == 1">
+          WHERE sm.parentid != 0
+        </if>
+      </if>
+    </if>
+    <if test="querytype == 2">
+      <if test="roleid != null">
+        ,t.menuid checkedid
+      </if>
+      FROM t_sysmenu sm
+      <if test="roleid != null">
+        LEFT JOIN (
+        SELECT rm.menuid FROM t_roleright rm INNER JOIN t_role r ON rm.roleid=r.id
+        WHERE roleid = #{roleid}
+        ) t
+        ON sm.id=t.menuid
+      </if>
+    </if>
+    ORDER BY -sortlevel DESC
+  </select>
+
+  <!-- 根据菜单id查询菜单 -->
+  <select id="findById" parameterType="int" resultMap="BaseResultMap">
+    SELECT * FROM t_sysmenu WHERE id=#{id}
+  </select>
+
+  <!-- 新增菜单 -->
+  
+
+  <!-- 修改菜单 -->
+  
+
+  <!-- 根据菜单id查询父级菜单是否有子节点 -->
+  <select id="findMenuIsparent" parameterType="int" resultType="int">
+    SELECT COUNT(1) FROM t_sysmenu WHERE parentid = (SELECT parentid FROM
+    t_sysmenu WHERE id=#{id}) AND id!=#{id}
+  </select>
+
+  <!-- 修改菜单排序深度 -->
+  <update id="updateMenuSortlevel">
+    UPDATE t_sysmenu SET
+    sortlevel=CONCAT(REPLACE(SUBSTRING(sortlevel,1,LENGTH(#{preParSortlevel})),#{preParSortlevel},#{parSortlevel}),SUBSTRING(sortlevel,LENGTH(#{preParSortlevel})+1))
+  </update>
+
+  <!-- 修改菜单深度 -->
+  <update id="updateMenuLevel">
+    UPDATE t_sysmenu SET menulevel=REPLACE(menulevel,#{preMenuLevel},#{menuLevel})
+  </update>
+
+  <!-- 删除菜单 -->
+  <delete id="deleteMenu" parameterType="string">
+    DELETE FROM t_sysmenu
+    WHERE menulevel LIKE "%"#{menulevel}"%"
+  </delete>
+
+  <!-- 查询菜单图片项 -->
+  <select id="findMenuImgs" resultType="java.util.HashMap">
+    SELECT c.codename,codeimg
+    FROM t_codeinfo c
+  </select>
+  
+</mapper>

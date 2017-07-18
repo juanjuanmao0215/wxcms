@@ -1,7 +1,8 @@
 package cn.com.lzt.service.role;
 
+import cn.com.lzt.model.TRole;
+
 import java.util.List;
-import cn.com.lzt.model.Role;
 
 public interface IRoleService {
 
@@ -10,6 +11,6 @@ public interface IRoleService {
 	 * 
 	 * @return
 	 */
-	List<Role> findRoles();
+	List<TRole> findRoles();
 
 }

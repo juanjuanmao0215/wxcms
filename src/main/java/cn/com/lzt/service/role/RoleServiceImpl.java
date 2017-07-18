@@ -1,11 +1,13 @@
 package cn.com.lzt.service.role;
 
-import java.util.List;
+import cn.com.lzt.mapper.RoleMapper;
+import cn.com.lzt.mapper.TRoleMapper;
+import cn.com.lzt.model.TRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import cn.com.lzt.mapper.RoleMapper;
-import cn.com.lzt.model.Role;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -13,6 +15,8 @@ public class RoleServiceImpl implements IRoleService {
 
 	@Autowired
 	private RoleMapper roleMapper;
+	@Autowired
+	private TRoleMapper troleMapper;
 
 	/**
 	 * 角色查询
@@ -20,8 +24,8 @@ public class RoleServiceImpl implements IRoleService {
 	 * @return
 	 */
 	@Override
-	public List<Role> findRoles() {
-		return this.roleMapper.findRoles();
+	public List<TRole> findRoles() {
+		return this.troleMapper.findRoles();
 	}
 
 }

@@ -1,8 +1,16 @@
 package cn.com.lzt.controller;
 
-import java.util.List;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
+import cn.com.lzt.common.util.Constants;
+import cn.com.lzt.common.util.MD5;
+import cn.com.lzt.model.BaseMap;
+import cn.com.lzt.model.TRole;
+import cn.com.lzt.model.TSysuser;
+import cn.com.lzt.model.dto.LoginReq;
+import cn.com.lzt.model.dto.SysUserDto;
+import cn.com.lzt.service.role.IRoleService;
+import cn.com.lzt.service.sys.ISysService;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,17 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import cn.com.lzt.common.util.Constants;
-import cn.com.lzt.common.util.MD5;
-import cn.com.lzt.model.BaseMap;
-import cn.com.lzt.model.Role;
-import cn.com.lzt.model.SysUser;
-import cn.com.lzt.model.dto.LoginReq;
-import cn.com.lzt.model.dto.SysUserDto;
-import cn.com.lzt.service.role.IRoleService;
-import cn.com.lzt.service.sys.ISysService;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.PageInfo;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/sys")
@@ -37,14 +38,14 @@ public class SysController extends BaseController {
 	/**
 	 * 系统登录
 	 * 
-	 * @param sysuser
+	 * @param 
 	 * @return
 	 */
 	@RequestMapping(value = "login.do", method = RequestMethod.POST)
 	@ResponseBody
 	public Object login(@RequestBody LoginReq req, HttpServletRequest request) {
 		Map<String, Object> map = BaseMap.getMap(LOGIN_SUCCESS);
-		SysUser user = this.sysService.findUserByLoginId(req.getLoginid());
+		TSysuser user = this.sysService.findUserByLoginId(req.getLoginid());
 		boolean loginsuccess = false;
 		if (user != null) {
 			if (user.getPwd().equals(req.getPwd())) {
@@ -69,7 +70,7 @@ public class SysController extends BaseController {
 	@RequestMapping("toSysUsers.do")
 	public ModelAndView toSysUsers(@ModelAttribute("user") SysUserDto userDto) {
 		ModelAndView mav = new ModelAndView();
-		List<Role> roles = this.roleService.findRoles();
+		List<TRole> roles = this.roleService.findRoles();
 		mav.addObject("roles", roles);
 		mav.setViewName("sys/sysusers");
 		return mav;
@@ -82,7 +83,7 @@ public class SysController extends BaseController {
 	 */
 	@RequestMapping(value = "findSysUsers.do", method = RequestMethod.POST)
 	@ResponseBody
-	public Object findSysUsers(SysUserDto userDto){
+	public Object findSysUsers(TSysuser userDto){
 		Map<String, Object> map = BaseMap.getMap(FIND_SUCCESS);
 		if (StringUtils.isEmpty(userDto.getSortcolumn())) {
 			userDto.setSortcolumn("createdate");
@@ -100,12 +101,12 @@ public class SysController extends BaseController {
 	/**
 	 * 保存系统用户
 	 * 
-	 * @param user
+	 * @param 
 	 * @return
 	 */
 	@RequestMapping(value = "saveUser.do", method = RequestMethod.POST)
 	@ResponseBody
-	public Object saveUser(SysUserDto userDto) {
+	public Object saveUser(TSysuser userDto) {
 		Map<String, Object> map = BaseMap.getMap(SAVE_SUCCESS);
 		if (userDto.getId() == null) {
 			// 添加用户
@@ -122,7 +123,7 @@ public class SysController extends BaseController {
 	/**
 	 * 删除系统用户
 	 * 
-	 * @param req
+	 * @param 
 	 * @return
 	 */
 	@RequestMapping(value = "deleteUser.do", method = RequestMethod.POST)
@@ -150,7 +151,7 @@ public class SysController extends BaseController {
 	/**
 	 * 系统用户详情查询
 	 * 
-	 * @param userreq
+	 * @param 
 	 * @return
 	 */
 	@RequestMapping("toUserinfo.do")
@@ -158,10 +159,10 @@ public class SysController extends BaseController {
 		ModelAndView mav = new ModelAndView();
 		if (userDto.getId() != null) {
 			// 修改用户的时候根据用户id查询用户信息
-			SysUserDto user = this.sysService.findUserById(userDto.getId());
+			TSysuser user = this.sysService.findUserById(userDto.getId());
 			mav.addObject("user", user);
 		}
-		List<Role> roles = this.roleService.findRoles();
+		List<TRole> roles = this.roleService.findRoles();
 		mav.addObject("roles", roles);
 		mav.setViewName("sys/sysuserinfo");
 		return mav;

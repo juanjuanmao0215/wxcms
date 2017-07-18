@@ -1,25 +1,25 @@
 package cn.com.lzt.service.sys;
 
-import java.util.List;
-import java.util.Map;
+import cn.com.lzt.mapper.TSysuserMapper;
+import cn.com.lzt.mapper.TUserroleMapper;
+import cn.com.lzt.model.TSysuser;
+import cn.com.lzt.model.TUserrole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import cn.com.lzt.mapper.SysUserMapper;
-import cn.com.lzt.mapper.UserRoleMapper;
-import cn.com.lzt.model.SysUser;
-import cn.com.lzt.model.UserRole;
-import cn.com.lzt.model.dto.SysUserDto;
+
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
 public class SysServiceImpl implements ISysService {
 
 	@Autowired
-	private SysUserMapper sysUserMapper;
+	private TSysuserMapper sysUserMapper;
 
 	@Autowired
-	private UserRoleMapper userRoleMapper;
+	private TUserroleMapper userRoleMapper;
 
 	/**
 	 * 根据登录账号查询用户
@@ -28,7 +28,7 @@ public class SysServiceImpl implements ISysService {
 	 * @return
 	 */
 	@Override
-	public SysUser findUserByLoginId(String loginid) {
+	public TSysuser findUserByLoginId(String loginid) {
 		return this.sysUserMapper.findUserByLoginId(loginid);
 	}
 
@@ -39,7 +39,7 @@ public class SysServiceImpl implements ISysService {
 	 * @return
 	 */
 	@Override
-	public SysUserDto findUserById(int userid) {
+	public TSysuser findUserById(int userid) {
 		return this.sysUserMapper.findUserById(userid);
 	}
 
@@ -47,14 +47,14 @@ public class SysServiceImpl implements ISysService {
 	 * 新增用户
 	 */
 	@Override
-	public void addUser(SysUserDto userdto) {
-		this.sysUserMapper.add(userdto);
+	public void addUser(TSysuser userdto) {
+		this.sysUserMapper.insertSelective(userdto);
 		// 保存用户和角色的关系
-		UserRole userRole = new UserRole();
+		TUserrole userRole = new TUserrole();
 		userRole.setUserid(userdto.getId());
-		userRole.setRoleid(userdto.getRoleid());
+		userRole.setRoleid(userdto.getRoleId());
 		userRole.setCreateuserid(userdto.getId());
-		this.userRoleMapper.add(userRole);
+		this.userRoleMapper.insertSelective(userRole);
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class SysServiceImpl implements ISysService {
 	 */
 	@Override
 	public void deleteUser(Integer userid) {
-		this.sysUserMapper.deleteById(userid);
+		this.sysUserMapper.deleteByPrimaryKey(userid);
 		// 删除用户和角色的关系
 		this.userRoleMapper.deleteByUserid(userid);
 	}
@@ -82,15 +82,15 @@ public class SysServiceImpl implements ISysService {
 	/**
 	 * 修改用户
 	 * 
-	 * @param user
+	 * @param userdto
 	 */
 	@Override
-	public void updateUser(SysUserDto userdto) {
-		this.sysUserMapper.update(userdto);
-		UserRole userRole = this.userRoleMapper.findByUserid(userdto.getId());
-		if (userRole != null && userRole.getRoleid() != userdto.getRoleid()) {
+	public void updateUser(TSysuser userdto) {
+		this.sysUserMapper.updateByPrimaryKeySelective(userdto);
+		TUserrole userRole = this.userRoleMapper.findByUserid(userdto.getId());
+		if (userRole != null && userRole.getRoleid() != userdto.getRoleId()) {
 			// 修改用户角色
-			this.userRoleMapper.updateUserRoleById(userdto.getRoleid(),userdto.getId());
+			this.userRoleMapper.updateUserRoleById(userdto.getRoleId(),userdto.getId());
 		}
 	}
 
@@ -101,7 +101,7 @@ public class SysServiceImpl implements ISysService {
 	 * @return
 	 */
 	@Override
-	public List<Map<String, Object>> findSysUsers(SysUserDto userDto) {
+	public List<Map<String, Object>> findSysUsers(TSysuser userDto) {
 		return this.sysUserMapper.findSysUsers(userDto);
 	}
 

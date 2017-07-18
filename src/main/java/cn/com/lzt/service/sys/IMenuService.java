@@ -1,8 +1,9 @@
 package cn.com.lzt.service.sys;
 
+import cn.com.lzt.model.TSysmenu;
+
 import java.util.List;
 import java.util.Map;
-import cn.com.lzt.model.SysMenu;
 
 public interface IMenuService {
 
@@ -22,7 +23,7 @@ public interface IMenuService {
 	 * 
 	 * @param menu
 	 */
-	void saveSysMenu(SysMenu menu);
+	void saveSysMenu(TSysmenu menu);
 
 	/**
 	 * 删除菜单

@@ -312,9 +312,9 @@
 				</configuration>
 			</plugin>
 
-			<plugin>
+			<!--<plugin>
 				<groupId>org.mortbay.jetty</groupId>
-				<!-- 使用的是jetty-maven-plugin的插件 -->
+				&lt;!&ndash; 使用的是jetty-maven-plugin的插件 &ndash;&gt;
 				<artifactId>jetty-maven-plugin</artifactId>
 				<configuration>
 					<scanIntervalSeconds>1000</scanIntervalSeconds>
@@ -328,7 +328,7 @@
 						</connector>
 					</connectors>
 				</configuration>
-			</plugin>
+			</plugin>-->
 		</plugins>
 	</build>
 </project>

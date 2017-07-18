@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.lzt.mapper.TSysuserMapper" >
+  <resultMap id="BaseResultMap" type="cn.com.lzt.model.TSysuser" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="loginid" property="loginid" jdbcType="VARCHAR" />
+    <result column="pwd" property="pwd" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="email" property="email" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="INTEGER" />
+    <result column="telno" property="telno" jdbcType="VARCHAR" />
+    <result column="isdel" property="isdel" jdbcType="INTEGER" />
+    <result column="roleid" property="roleId" jdbcType="INTEGER" />
+    <result column="createdate" property="createdate" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+
+
+  <!-- 根据登录账号查询用户 -->
+  <select id="findUserByLoginId" parameterType="string" resultMap="BaseResultMap">
+    SELECT * FROM t_sysuser WHERE loginid = #{loginid}
+  </select>
+
+  <!-- 根据用户ID查询用户 -->
+  <select id="findUserById" parameterType="int" resultMap="BaseResultMap">
+    SELECT su.*,ur.roleid FROM t_sysuser su INNER JOIN t_userrole ur ON su.id=ur.userid WHERE su.id=#{id}
+  </select>
+
+
+
+  <!-- 删除用户 -->
+  <delete id="deleteById" parameterType="int">
+    DELETE FROM t_sysuser WHERE id = #{id}
+  </delete>
+
+  <!-- 批量删除用户 -->
+  <delete id="batchdeleteuser" parameterType="string">
+    DELETE FROM t_sysuser WHERE id IN
+    <foreach collection="array" item="id" open="(" separator="," close=")">
+      #{id}
+    </foreach>
+  </delete>
+
+
+  <!-- 系统用户列表查询 -->
+  <select id="findSysUsers" parameterType="cn.com.lzt.model.TSysuser" resultType="java.util.HashMap">
+    SELECT u.*,r.rolename
+    FROM t_sysuser u INNER JOIN
+    (SELECT userid,roleid FROM t_userrole) ur ON u.id=ur.userid
+    INNER JOIN
+    (SELECT id,rolename FROM t_role) r ON ur.roleid=r.id
+    <where>
+      u.isdel = 0
+      <if test="username !=null and username !=''">
+        and u.username like "%"#{username}"%"
+      </if>
+      <if test="sex !=null and sex !=''">
+        and u.sex=#{sex}
+      </if>
+      <if test="roleid !=null and roleid !=''">
+        and r.id=#{roleid}
+      </if>
+      <if test="startdate !=null and startdate !=''">
+        <![CDATA[
+					and DATE_FORMAT(u.createdate, '%Y-%m-%d')>=#{startdate}
+				]]>
+      </if>
+      <if test="enddate !=null and enddate !=''">
+        <![CDATA[
+					and DATE_FORMAT(u.createdate, '%Y-%m-%d')<=#{enddate}
+				]]>
+      </if>
+    </where>
+    ORDER BY CONCAT('u.',${sortcolumn}) ${sorttype}
+  </select>
+
+
+
+
+
+
+
+
+  <!--______________________________________________________________-->
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, loginid, pwd, username, email, sex, telno, isdel, createdate
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.com.lzt.model.TSysuserCriteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_sysuser
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart != null and limitStart>=0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_sysuser
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_sysuser
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.com.lzt.model.TSysuserCriteria" >
+    delete from t_sysuser
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.com.lzt.model.TSysuser" >
+    insert into t_sysuser (id, loginid, pwd, 
+      username, email, sex, 
+      telno, isdel, createdate
+      )
+    values (#{id,jdbcType=INTEGER}, #{loginid,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, 
+      #{username,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, 
+      #{telno,jdbcType=VARCHAR}, #{isdel,jdbcType=INTEGER}, #{createdate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.com.lzt.model.TSysuser" >
+    insert into t_sysuser
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="loginid != null" >
+        loginid,
+      </if>
+      <if test="pwd != null" >
+        pwd,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="telno != null" >
+        telno,
+      </if>
+      <if test="isdel != null" >
+        isdel,
+      </if>
+      <if test="createdate != null" >
+        createdate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="loginid != null" >
+        #{loginid,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="telno != null" >
+        #{telno,jdbcType=VARCHAR},
+      </if>
+      <if test="isdel != null" >
+        #{isdel,jdbcType=INTEGER},
+      </if>
+      <if test="createdate != null" >
+        #{createdate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.com.lzt.model.TSysuserCriteria" resultType="java.lang.Integer" >
+    select count(*) from t_sysuser
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_sysuser
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.loginid != null" >
+        loginid = #{record.loginid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.pwd != null" >
+        pwd = #{record.pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.username != null" >
+        username = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.email != null" >
+        email = #{record.email,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sex != null" >
+        sex = #{record.sex,jdbcType=INTEGER},
+      </if>
+      <if test="record.telno != null" >
+        telno = #{record.telno,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isdel != null" >
+        isdel = #{record.isdel,jdbcType=INTEGER},
+      </if>
+      <if test="record.createdate != null" >
+        createdate = #{record.createdate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_sysuser
+    set id = #{record.id,jdbcType=INTEGER},
+      loginid = #{record.loginid,jdbcType=VARCHAR},
+      pwd = #{record.pwd,jdbcType=VARCHAR},
+      username = #{record.username,jdbcType=VARCHAR},
+      email = #{record.email,jdbcType=VARCHAR},
+      sex = #{record.sex,jdbcType=INTEGER},
+      telno = #{record.telno,jdbcType=VARCHAR},
+      isdel = #{record.isdel,jdbcType=INTEGER},
+      createdate = #{record.createdate,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.com.lzt.model.TSysuser" >
+    update t_sysuser
+    <set >
+      <if test="loginid != null" >
+        loginid = #{loginid,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null" >
+        pwd = #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null" >
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="telno != null" >
+        telno = #{telno,jdbcType=VARCHAR},
+      </if>
+      <if test="isdel != null" >
+        isdel = #{isdel,jdbcType=INTEGER},
+      </if>
+      <if test="createdate != null" >
+        createdate = #{createdate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.com.lzt.model.TSysuser" >
+    update t_sysuser
+    set loginid = #{loginid,jdbcType=VARCHAR},
+      pwd = #{pwd,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=INTEGER},
+      telno = #{telno,jdbcType=VARCHAR},
+      isdel = #{isdel,jdbcType=INTEGER},
+      createdate = #{createdate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

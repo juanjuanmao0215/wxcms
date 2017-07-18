@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.lzt.mapper.TAdMapper" >
+  <resultMap id="BaseResultMap" type="cn.com.lzt.model.TAd" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="imgurl" property="imgurl" jdbcType="VARCHAR" />
+    <result column="showurl" property="showurl" jdbcType="VARCHAR" />
+    <result column="showtitle" property="showtitle" jdbcType="VARCHAR" />
+    <result column="showcontent" property="showcontent" jdbcType="VARCHAR" />
+    <result column="sortnum" property="sortnum" jdbcType="INTEGER" />
+    <result column="intime" property="intime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, imgurl, showurl, showtitle, showcontent, sortnum, intime
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.com.lzt.model.TAdCriteria" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from t_ad
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart != null and limitStart>=0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_ad
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_ad
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.com.lzt.model.TAdCriteria" >
+    delete from t_ad
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.com.lzt.model.TAd" >
+    insert into t_ad (id, imgurl, showurl, 
+      showtitle, showcontent, sortnum, 
+      intime)
+    values (#{id,jdbcType=INTEGER}, #{imgurl,jdbcType=VARCHAR}, #{showurl,jdbcType=VARCHAR}, 
+      #{showtitle,jdbcType=VARCHAR}, #{showcontent,jdbcType=VARCHAR}, #{sortnum,jdbcType=INTEGER}, 
+      #{intime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.com.lzt.model.TAd" >
+    insert into t_ad
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="imgurl != null" >
+        imgurl,
+      </if>
+      <if test="showurl != null" >
+        showurl,
+      </if>
+      <if test="showtitle != null" >
+        showtitle,
+      </if>
+      <if test="showcontent != null" >
+        showcontent,
+      </if>
+      <if test="sortnum != null" >
+        sortnum,
+      </if>
+      <if test="intime != null" >
+        intime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="imgurl != null" >
+        #{imgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="showurl != null" >
+        #{showurl,jdbcType=VARCHAR},
+      </if>
+      <if test="showtitle != null" >
+        #{showtitle,jdbcType=VARCHAR},
+      </if>
+      <if test="showcontent != null" >
+        #{showcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="sortnum != null" >
+        #{sortnum,jdbcType=INTEGER},
+      </if>
+      <if test="intime != null" >
+        #{intime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.com.lzt.model.TAdCriteria" resultType="java.lang.Integer" >
+    select count(*) from t_ad
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update t_ad
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.imgurl != null" >
+        imgurl = #{record.imgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.showurl != null" >
+        showurl = #{record.showurl,jdbcType=VARCHAR},
+      </if>
+      <if test="record.showtitle != null" >
+        showtitle = #{record.showtitle,jdbcType=VARCHAR},
+      </if>
+      <if test="record.showcontent != null" >
+        showcontent = #{record.showcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.sortnum != null" >
+        sortnum = #{record.sortnum,jdbcType=INTEGER},
+      </if>
+      <if test="record.intime != null" >
+        intime = #{record.intime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update t_ad
+    set id = #{record.id,jdbcType=INTEGER},
+      imgurl = #{record.imgurl,jdbcType=VARCHAR},
+      showurl = #{record.showurl,jdbcType=VARCHAR},
+      showtitle = #{record.showtitle,jdbcType=VARCHAR},
+      showcontent = #{record.showcontent,jdbcType=VARCHAR},
+      sortnum = #{record.sortnum,jdbcType=INTEGER},
+      intime = #{record.intime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.com.lzt.model.TAd" >
+    update t_ad
+    <set >
+      <if test="imgurl != null" >
+        imgurl = #{imgurl,jdbcType=VARCHAR},
+      </if>
+      <if test="showurl != null" >
+        showurl = #{showurl,jdbcType=VARCHAR},
+      </if>
+      <if test="showtitle != null" >
+        showtitle = #{showtitle,jdbcType=VARCHAR},
+      </if>
+      <if test="showcontent != null" >
+        showcontent = #{showcontent,jdbcType=VARCHAR},
+      </if>
+      <if test="sortnum != null" >
+        sortnum = #{sortnum,jdbcType=INTEGER},
+      </if>
+      <if test="intime != null" >
+        intime = #{intime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.com.lzt.model.TAd" >
+    update t_ad
+    set imgurl = #{imgurl,jdbcType=VARCHAR},
+      showurl = #{showurl,jdbcType=VARCHAR},
+      showtitle = #{showtitle,jdbcType=VARCHAR},
+      showcontent = #{showcontent,jdbcType=VARCHAR},
+      sortnum = #{sortnum,jdbcType=INTEGER},
+      intime = #{intime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

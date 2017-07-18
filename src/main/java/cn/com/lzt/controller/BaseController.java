@@ -1,10 +1,11 @@
 package cn.com.lzt.controller;
 
-import javax.servlet.http.HttpServletRequest;
+import cn.com.lzt.common.util.Constants;
+import cn.com.lzt.model.TSysuser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.util.WebUtils;
-import cn.com.lzt.common.util.Constants;
-import cn.com.lzt.model.SysUser;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class BaseController {
 
@@ -56,12 +57,12 @@ public class BaseController {
 	@Value("${UPLOAD_DIR}")
 	public String UPLOAD_DIR;
 
-	protected SysUser getSessionUserWeb(HttpServletRequest req) {
-		return (SysUser) WebUtils.getSessionAttribute(req,
+	protected TSysuser getSessionUserWeb(HttpServletRequest req) {
+		return (TSysuser) WebUtils.getSessionAttribute(req,
 				Constants.USER_SESSION_KEY);
 	}
 
-	protected void setSessionManager(HttpServletRequest req, SysUser user) {
+	protected void setSessionManager(HttpServletRequest req, Object user) {
 		WebUtils.setSessionAttribute(req, Constants.USER_SESSION_KEY, user);
 	}
 

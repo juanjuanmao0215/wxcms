@@ -3,6 +3,7 @@ package cn.com.lzt.service.sys;
 import java.util.List;
 import java.util.Map;
 import cn.com.lzt.model.SysUser;
+import cn.com.lzt.model.TSysuser;
 import cn.com.lzt.model.dto.SysUserDto;
 
 public interface ISysService {
@@ -13,7 +14,7 @@ public interface ISysService {
 	 * @param loginid
 	 * @return
 	 */
-	SysUser findUserByLoginId(String loginid);
+	TSysuser findUserByLoginId(String loginid);
 
 	/**
 	 * 根据用户ID查询用户
@@ -21,14 +22,14 @@ public interface ISysService {
 	 * @param userid
 	 * @return
 	 */
-	SysUserDto findUserById(int userid);
+	TSysuser findUserById(int userid);
 
 	/**
 	 * 新增用户
 	 * 
 	 * @param userreq
 	 */
-	void addUser(SysUserDto userreq);
+	void addUser(TSysuser userreq);
 
 	/**
 	 * 删除用户
@@ -49,7 +50,7 @@ public interface ISysService {
 	 * 
 	 * @param user
 	 */
-	void updateUser(SysUserDto userreq);
+	void updateUser(TSysuser userreq);
 
 	/**
 	 * 系统用户查询
@@ -57,6 +58,6 @@ public interface ISysService {
 	 * @param userDto
 	 * @return
 	 */
-	List<Map<String, Object>> findSysUsers(SysUserDto userDto);
+	List<Map<String, Object>> findSysUsers(TSysuser userDto);
 	
 }

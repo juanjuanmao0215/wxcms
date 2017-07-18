@@ -1,32 +1,33 @@
 package cn.com.lzt.service.sys;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import cn.com.lzt.common.util.ztree.MenuZTree;
+import cn.com.lzt.mapper.TRolerightMapper;
+import cn.com.lzt.mapper.TSysmenuMapper;
+import cn.com.lzt.mapper.TUserroleMapper;
+import cn.com.lzt.model.TSysmenu;
+import cn.com.lzt.model.TUserrole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import cn.com.lzt.common.util.ztree.MenuZTree;
-import cn.com.lzt.mapper.RolerightMapper;
-import cn.com.lzt.mapper.SysMenuMapper;
-import cn.com.lzt.mapper.UserRoleMapper;
-import cn.com.lzt.model.SysMenu;
-import cn.com.lzt.model.UserRole;
-import cn.com.lzt.model.dto.SysMenuReq;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
 public class MenuServiceImpl implements IMenuService {
 
 	@Autowired
-	private UserRoleMapper userRoleMapper;
+	private TUserroleMapper userRoleMapper;
 
 	@Autowired
-	private SysMenuMapper sysMenuMapper;
+	private TSysmenuMapper sysMenuMapper;
 
 	@Autowired
-	private RolerightMapper rolerightMapper;
+	private TRolerightMapper rolerightMapper;
 
 	/**
 	 * 菜单查询
@@ -36,14 +37,14 @@ public class MenuServiceImpl implements IMenuService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		// querytype(0：菜单导航查询，1：菜单管理查询，2：菜单角色查询)
 		if (querytype != 2) {
-			UserRole userRole = this.userRoleMapper.findByUserid(userid);
+			TUserrole userRole = this.userRoleMapper.findByUserid(userid);
 			roleid = userRole.getRoleid();
 		}
-		List<SysMenuReq> menus = this.sysMenuMapper.findMenus(roleid, userid, querytype);
+		List<TSysmenu> menus = this.sysMenuMapper.findMenus(roleid, userid, querytype);
 		List<MenuZTree> menulist = new ArrayList<MenuZTree>();
 		if (menus != null && menus.size() > 0) {
 			Map<Integer, String> menumap = new HashMap<Integer, String>();
-			for (SysMenuReq menu : menus) {
+			for (TSysmenu menu : menus) {
 				MenuZTree ztree = new MenuZTree(menu.getId(),
 						menu.getParentid(), menu.getMenuname(), false,
 						menu.getParentflag() == 1 ? true : false,
@@ -75,9 +76,9 @@ public class MenuServiceImpl implements IMenuService {
 	 * 保存菜单
 	 */
 	@Override
-	public void saveSysMenu(SysMenu menu) {
+	public void saveSysMenu(TSysmenu menu) {
 		// 查询父级菜单
-		SysMenu parentmenu = this.sysMenuMapper.findById(menu.getParentid());
+		TSysmenu parentmenu = this.sysMenuMapper.selectByPrimaryKey(menu.getParentid());
 		String menulevel = parentmenu.getMenulevel() + ".";
 		if (menu.getParentid() == 1) {
 			menu.setSortlevel(String.valueOf(menu.getSortnum()));
@@ -88,17 +89,17 @@ public class MenuServiceImpl implements IMenuService {
 			if (parentmenu.getParentflag() == 0) {
 				// 更新父级菜单parentflag标识
 				parentmenu.setParentflag(1);
-				this.sysMenuMapper.update(parentmenu);
+				this.sysMenuMapper.updateByPrimaryKeySelective(parentmenu);
 			}
 		}
 		if (menu.getId() == null) {
 			// 新增菜单
-			this.sysMenuMapper.add(menu);
+			this.sysMenuMapper.insertSelective(menu);
 			menulevel += menu.getId();
 		} else {
 			// 修改菜单
 			menulevel += menu.getId();
-			SysMenu sysMenu = this.sysMenuMapper.findById(menu.getId());
+			TSysmenu sysMenu = this.sysMenuMapper.selectByPrimaryKey(menu.getId());
 			boolean parentchanged = (sysMenu.getParentid().intValue() 
 					!= menu.getParentid().intValue()) ? true : false;
 			if (sysMenu.getParentflag() == 1) {
@@ -121,15 +122,16 @@ public class MenuServiceImpl implements IMenuService {
 						.getId());
 				if (haschildren == 0) {
 					// 更新之前的父级菜单父级标识
-					SysMenu sysmenu = new SysMenu();
+					TSysmenu sysmenu = new TSysmenu();
 					sysmenu.setId(sysMenu.getParentid());
 					sysmenu.setParentflag(0);
-					this.sysMenuMapper.update(sysmenu);
+					this.sysMenuMapper.updateByPrimaryKeySelective(sysmenu);
 				}
 			}
 		}
 		menu.setMenulevel(menulevel);
-		this.sysMenuMapper.update(menu);
+		menu.setCreatedate(new Date());
+		this.sysMenuMapper.updateByPrimaryKeySelective(menu);
 	}
 
 	/**
@@ -139,16 +141,16 @@ public class MenuServiceImpl implements IMenuService {
 	 */
 	@Override
 	public void deleteMenu(Integer menuid) {
-		SysMenu menu = this.sysMenuMapper.findById(menuid);
+		TSysmenu menu = this.sysMenuMapper.selectByPrimaryKey(menuid);
 		this.sysMenuMapper.deleteMenu(menu.getMenulevel());
 		// 查询修改的菜单之前的父级菜单是否有子节点，没有子节点更新父级菜单标识
 		int haschildren = this.sysMenuMapper.findMenuIsparent(menuid);
 		if (haschildren == 0) {
 			// 更新之前的父级菜单父级标识
-			SysMenu sysmenu = new SysMenu();
+			TSysmenu sysmenu = new TSysmenu();
 			sysmenu.setId(menu.getParentid());
 			sysmenu.setParentflag(0);
-			this.sysMenuMapper.update(sysmenu);
+			this.sysMenuMapper.updateByPrimaryKeySelective(sysmenu);
 		}
 	}
 
