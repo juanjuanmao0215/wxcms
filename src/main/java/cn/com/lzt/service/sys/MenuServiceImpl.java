@@ -94,6 +94,7 @@ public class MenuServiceImpl implements IMenuService {
 		}
 		if (menu.getId() == null) {
 			// 新增菜单
+			menu.setCreatedate(new Date());
 			this.sysMenuMapper.insertSelective(menu);
 			menulevel += menu.getId();
 		} else {
