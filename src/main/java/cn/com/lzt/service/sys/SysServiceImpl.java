@@ -56,6 +56,7 @@ public class SysServiceImpl implements ISysService {
 		userRole.setUserid(userdto.getId());
 		userRole.setRoleid(userdto.getRoleId());
 		userRole.setCreateuserid(userdto.getId());
+		userRole.setCreatedate(new Date());
 		this.userRoleMapper.insertSelective(userRole);
 	}
 

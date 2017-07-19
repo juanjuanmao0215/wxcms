@@ -57,7 +57,7 @@
       <if test="sex !=null and sex !=''">
         and u.sex=#{sex}
       </if>
-      <if test="roleid !=null and roleid !=''">
+      <if test="roleId !=null and roleId !=''">
         and r.id=#{roleid}
       </if>
       <if test="startdate !=null and startdate !=''">
